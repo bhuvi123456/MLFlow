@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/Sai%20Kaushik/mlflow/mlruns/0/59996fd0557d467e9a3afbecae6393bc/artifacts
+end_time: 1726644235332
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 59996fd0557d467e9a3afbecae6393bc
+run_name: caring-rat-348
+run_uuid: 59996fd0557d467e9a3afbecae6393bc
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1726644235260
+status: 3
+tags: []
+user_id: Sai Kaushik
