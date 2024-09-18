@@ -33,26 +33,33 @@ def main(model_type='randomforest'):
     x_test = test.drop(columns = 'quality')
     y_train = train['quality']
     y_test = test['quality']
-    if model_type ==  'randomforest':
-        model = RandomForestClassifier()
-        params = {
-            'n_estimators' : [100,150,250,300],
-            'max_depth' : [5,10,15,20],
-        }
-    elif model_type == 'adaboost':
-        model = AdaBoostClassifier()
-        params = {
-            'n_estimators': [100, 150, 250, 300],
-            'learning_rate' : [0.01,0.1,0.5,1]
-        }
-    grid = GridSearchCV(estimator = model,param_grid = params)
-    grid.fit(x_train,y_train)
-    y_pred = grid.predict(x_test)
-    accuracy,confusion,classification = evaluate_model(y_test,y_pred)
-    print(f"Best parameters: {grid.best_params_}")
-    print(f"Accuracy: {accuracy}")
-    print(f"Confusion Matrix:\n{confusion}")
-    print(f"Classification Report:\n{classification}")
+    with mlflow.start_run:
+        if model_type ==  'randomforest':
+            model = RandomForestClassifier()
+            params = {
+                'n_estimators' : [100,150,250,300],
+                'max_depth' : [5,10,15,20],
+            }
+        elif model_type == 'adaboost':
+            model = AdaBoostClassifier()
+            params = {
+                'n_estimators': [100, 150, 250, 300],
+                'learning_rate' : [0.01,0.1,0.5,1]
+            }
+        grid = GridSearchCV(estimator = model,param_grid = params)
+        grid.fit(x_train,y_train)
+        y_pred = grid.predict(x_test)
+        best_params = grid.best_params_
+        accuracy,confusion,classification = evaluate_model(y_test,y_pred)
+        print(f"Best parameters: {grid.best_params_}")
+        print(f"Accuracy: {accuracy}")
+        print(f"Confusion Matrix:\n{confusion}")
+        print(f"Classification Report:\n{classification}")
+        mlflow.log_param("n_estimators",best_params['n_estimators'])
+        mlflow.log_param("max_depth",best_params['max_depth'])
+        mlflow.metrics("accuracy", accuracy)
+        mlflow.metrics("confusion_matrix",confusion)
+
 
 if __name__ == '__main__':
     '''args = argparse.ArgumentParser()
